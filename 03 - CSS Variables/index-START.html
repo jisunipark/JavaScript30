@@ -30,6 +30,22 @@
     <img src="https://cdn.pixabay.com/photo/2024/01/14/16/30/mountain-range-8508224_1280.jpg" />
 
     <style>
+      :root {
+        --base: #ffc660;
+        --spacing: 10px;
+        --blur: 10px;
+      }
+
+      img {
+        padding: var(--spacing);
+        background: var(--base);
+        filter: blur(var(--blur));
+      }
+
+      .hl {
+        color: var(--base);
+      }
+
       /*
         misc styles, nothing to do with CSS variables
       */
@@ -53,34 +69,15 @@
     </style>
 
     <script>
-      const spacingInput = document.getElementById('spacing');
-      const blurInput = document.getElementById('blur');
-      const baseInput = document.getElementById('base');
-      const img = document.querySelector('img');
-      const highlight = document.querySelector('.hl');
+      const inputs = document.querySelectorAll('.controls input');
 
-      function handleSpacing(e) {
-        const spacing = e.target.value;
-        img.style.border = `${spacing}px solid ${baseInput.value}`;
+      function handleUpdate() {
+        const suffix = this.dataset.sizing || '';
+        document.documentElement.style.setProperty(`--${this.name}`, this.value + suffix);
       }
 
-      function handleBlur(e) {
-        const blur = e.target.value;
-        img.style.filter = `blur(${blur}px)`;
-      }
-
-      function handleBase(e) {
-        const base = e.target.value;
-
-        img.style.borderColor = base;
-        highlight.style.color = base;
-      }
-
-      spacingInput.addEventListener('input', handleSpacing);
-      blurInput.addEventListener('input', handleBlur);
-      baseInput.addEventListener('input', handleBase);
-
-      highlight.style.color = baseInput.value;
+      inputs.forEach((input) => input.addEventListener('change', handleUpdate));
+      inputs.forEach((input) => input.addEventListener('mousemove', handleUpdate));
     </script>
   </body>
 </html>
