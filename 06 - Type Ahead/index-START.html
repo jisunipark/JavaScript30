@@ -1,23 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Type Ahead 👀</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="https://fav.farm/🔥" />
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Type Ahead 👀</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="https://fav.farm/🔥" />
+  </head>
+  <body>
+    <form class="search-form">
+      <input type="text" class="search" placeholder="City or State" />
+      <ul class="suggestions">
+        <li>Filter for a city</li>
+        <li>or a state</li>
+      </ul>
+    </form>
+    <script>
+      const endpoint =
+        'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
 
-  <form class="search-form">
-    <input type="text" class="search" placeholder="City or State">
-    <ul class="suggestions">
-      <li>Filter for a city</li>
-      <li>or a state</li>
-    </ul>
-  </form>
-<script>
-const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+      const input = document.querySelector('.search');
+      const suggestions = document.querySelector('.suggestions');
 
-</script>
-</body>
+      // input에 무엇이 입력되어 있는지 파악하기
+      // 입력된 것이 포함되어 있는 city나 state 필터링하기
+      // 필터링한 것들 DOM에 보여주기
+
+      async function handleInput(e) {
+        const userInput = this.value;
+
+        const response = await fetch(endpoint);
+        const data = await response.json();
+
+        const filteredElements = data
+          .filter((el) => el.city.includes(userInput) || el.state.includes(userInput))
+          .map(
+            (el) =>
+              `<li>${el.city}, ${el.state}<span class="population">${el.population}</span></li>`
+          )
+          .reduce((content, li) => {
+            return content + li;
+          }, '');
+
+        suggestions.innerHTML = filteredElements;
+      }
+
+      input.addEventListener('input', handleInput);
+    </script>
+  </body>
 </html>
